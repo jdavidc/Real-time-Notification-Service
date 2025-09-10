@@ -6,11 +6,14 @@ import com.proxyapi.notificationservice.model.Notification;
 import com.proxyapi.notificationservice.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +46,19 @@ public class NotificationService {
         return notificationRepository.findByRecipientIdOrderByCreatedAtDesc(userId).stream()
                 .map(NotificationDto::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<NotificationDto> getUserNotifications(String userId, Pageable pageable) {
+        return notificationRepository.findByRecipientIdOrderByCreatedAtDesc(userId, pageable)
+                .map(NotificationDto::fromEntity);
+    }
+
+    @Transactional(readOnly = true)
+    public NotificationDto getNotificationById(Long id) {
+        return notificationRepository.findById(id)
+                .map(NotificationDto::fromEntity)
+                .orElseThrow(() -> new NotificationNotFoundException("Notification not found with id: " + id));
     }
 
     @Transactional
