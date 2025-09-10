@@ -44,6 +44,8 @@ A scalable, real-time notification service built with Spring Boot and WebSockets
 2. **Configure the database**
    - For development (using H2 in-memory database):
      - No additional setup required
+     - Access console at: `http://localhost:8080/h2-console`
+     - JDBC URL: `jdbc:h2:mem:notificationdb`
    - For production (using PostgreSQL):
      - Create a PostgreSQL database
      - Update `application.yml` with your database credentials
@@ -60,30 +62,56 @@ A scalable, real-time notification service built with Spring Boot and WebSockets
 
    The application will start on `http://localhost:8080`
 
+5. **Verify the application is running**
+   ```bash
+   curl http://localhost:8080/api/v2/notifications/test
+   ```
+   Should return: `"Notification service is working!"`
+
 ## 🌐 API Endpoints
 
-### Notifications
+### API v2 (Recommended)
+**Base URL**: `/api/v2/notifications`
 
-- `GET /notifications` - Get all notifications for the current user
-  - Query Params: `userId` (optional, defaults to 'test-user')
+- `GET /` - Get paginated notifications for a user
+  - Query Params: 
+    - `userId` (required): The ID of the user
+    - `page`: Page number (default: 0)
+    - `size`: Items per page (default: 20)
+    - `sort`: Sort criteria (e.g., `createdAt,desc`)
   
-- `GET /notifications/unread/count` - Get count of unread notifications
-  - Query Params: `userId` (optional, defaults to 'test-user')
+- `GET /{id}` - Get a specific notification by ID
+  - Path Variable: `id` (notification ID)
   
-- `POST /notifications` - Create a new notification
+- `GET /unread/count` - Get count of unread notifications
+  - Query Params: `userId` (required)
+  
+- `POST /` - Create a new notification
   - Request Body: NotificationDto (JSON)
   
-- `PUT /notifications/{id}/read` - Mark a notification as read
+- `PATCH /{id}/read` - Mark a notification as read
   - Path Variable: `id` (notification ID)
   
-- `DELETE /notifications/{id}` - Delete a notification
+- `DELETE /{id}` - Delete a notification
   - Path Variable: `id` (notification ID)
+
+### API v1 (Deprecated)
+**Base URL**: `/api/v1/notifications`
+
+- `GET /` - Get all notifications for a user (not paginated)
+  - Query Params: `userId` (optional, defaults to 'test-user')
+  
+- `POST /` - Create a new notification
+  - Request Body: NotificationDto (JSON)
 
 ### WebSocket Endpoints
 
-- **WebSocket Connection**: `ws://localhost:8080/ws`
-- **Subscribe to notifications**: `/topic/notifications/{userId}`
-- **Send notification**: `/app/notifications/send`
+- **WebSocket Connection**: `ws://localhost:8080/ws/notifications`
+- **Subscribe to user notifications**: 
+  - Destination: `/user/queue/notifications`
+- **Send notification via WebSocket**: 
+  - Destination: `/app/notification`
+  - Body: NotificationDto (JSON)
 
 ## 📝 Example Usage
 

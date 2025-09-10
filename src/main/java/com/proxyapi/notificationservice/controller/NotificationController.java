@@ -13,10 +13,16 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/notifications")
+@RequestMapping("/api/v1/notifications")
+@Deprecated(since = "2.0.0", forRemoval = true)
 @RequiredArgsConstructor
 public class NotificationController {
 
+    /**
+     * @deprecated This version (v1) of the API is deprecated and will be removed in v3.0.0.
+     * Please migrate to v2 when it becomes available.
+     */
+    @Deprecated(since = "2.0.0", forRemoval = true)
     private final NotificationService notificationService;
 
     @GetMapping("/test")
