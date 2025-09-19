@@ -46,7 +46,37 @@ A scalable, real-time notification service built with Spring Boot and WebSockets
 
 ## 🛠️ Setup & Installation
 
-### Development Setup
+### Frontend Setup
+
+The frontend is built with Angular and provides a user interface for the notification service.
+
+#### Prerequisites
+- Node.js 18+ and npm 9+
+- Angular CLI (install with `npm install -g @angular/cli`)
+
+#### Installation
+1. Clone the frontend repository:
+   ```bash
+   git clone https://github.com/jdavidc/Real-time-Notification-Service-Frontend.git
+   cd Real-time-Notification-Service-Frontend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Configure environment:
+   - Update the `src/environments/environment.ts` file with your backend API and WebSocket URLs
+   - By default, it connects to `http://localhost:8080` for API and `ws://localhost:8080/ws` for WebSocket
+
+4. Start the development server:
+   ```bash
+   ng serve --port 4201
+   ```
+   The application will be available at `http://localhost:4201`
+
+### Backend Development Setup
 
 1. **Clone the repository**
    ```bash
